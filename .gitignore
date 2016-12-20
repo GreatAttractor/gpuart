@@ -1,0 +1,19 @@
+/Debug/
+/Release/
+/obj/
+/bin/
+/data/
+gpuart
+
+Makefile
+CMakeCache.txt
+/CMakeFiles/
+*.cmake
+
+# Eclipse/CDT project files
+.cproject
+.project
+
+#Code::Blocks files<F2>
+*.depend
+*.layout
