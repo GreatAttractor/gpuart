@@ -87,16 +87,16 @@ const vec3 PRIMITIVE_COLOR[] = vec3[](vec3(0.65, 0.4, 0.35), // sphere
                                       vec3(0.3, 0.3, 0.3)); // cone
 
 vec3 GetLambertShadedDiffuseColor(
-		in vec3 lightDir, ///< Unit vector
-		in vec3 normal,   ///< Unit vector
-		in vec3 diffuseColor,
-		in float lightIntensity)
+    in vec3 lightDir, ///< Unit vector
+    in vec3 normal,   ///< Unit vector
+    in vec3 diffuseColor,
+    in float lightIntensity)
 {
-	float dotp = dot(lightDir, normal);
-	if (dotp > 0)
-	    return diffuseColor * lightIntensity * dotp;
-	else
-	   return vec3(0, 0, 0);
+    float dotp = dot(lightDir, normal);
+    if (dotp > 0)
+        return diffuseColor * lightIntensity * dotp;
+    else
+        return vec3(0, 0, 0);
 }
 
 // Inputs -------------------------------------------------

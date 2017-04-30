@@ -42,31 +42,31 @@ void DiscIntersection(
 )
 {
     float tmp = dot(rdir, dnormal);
-	if (abs(tmp) < 1.0e-8)
+    if (abs(tmp) < 1.0e-8)
     {
         pos = -1;
         return;
     }
 
-	float k = dot(dnormal, center - rstart) / tmp;
+    float k = dot(dnormal, center - rstart) / tmp;
 
-	if (k <= 0)
+    if (k <= 0)
     {
         pos = -1;
-		return;
+        return;
     }
 
-	vec3 q = k * rdir + rstart;
+    vec3 q = k * rdir + rstart;
 
-	if (sqrlen(q - center) <= radius*radius)
+    if (sqrlen(q - center) <= radius*radius)
     {
-		pos = k;
-		intersection = rstart + k*rdir;
-		if (dot(rstart - center, dnormal) > 0)
+        pos = k;
+        intersection = rstart + k*rdir;
+        if (dot(rstart - center, dnormal) > 0)
             normal = dnormal;
         else
             normal = -dnormal;
     }
-	else
-		pos = -1;
+    else
+        pos = -1;
 }

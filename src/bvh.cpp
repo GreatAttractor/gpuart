@@ -35,120 +35,120 @@ static_assert(sizeof(GLfloat) == sizeof(uint32_t), "BVH code requires the sizes 
 void gpuart::BoundingVolumesHierarchy::Subdivide(gpuart::BoundingBox *node, std::vector<Primitive*> &primitives, size_t from, size_t to,
                                                  unsigned currentLevel, unsigned maxNumLevels, unsigned minPrimitivesPerNode)
 {
-	if (!node)
-		return;
+    if (!node)
+        return;
 
-	// Bounding box of all primitives from the range [from, to)
-	float xminall = 99.0e+29f, xmaxall = -99.0e+29f,
-		  yminall = 99.0e+29f, ymaxall = -99.0e+29f,
-		  zminall = 99.0e+29f, zmaxall = -99.0e+29f;
+    // Bounding box of all primitives from the range [from, to)
+    float xminall = 99.0e+29f, xmaxall = -99.0e+29f,
+          yminall = 99.0e+29f, ymaxall = -99.0e+29f,
+          zminall = 99.0e+29f, zmaxall = -99.0e+29f;
 
-	// Find the largest-extent axis of the primitives
-	for (size_t i = from; i < to; i++)
-	{
-		float xmin = primitives[i]->GetXmin(), xmax = primitives[i]->GetXmax(),
-			ymin = primitives[i]->GetYmin(), ymax = primitives[i]->GetYmax(),
-			zmin = primitives[i]->GetZmin(), zmax = primitives[i]->GetZmax();
+    // Find the largest-extent axis of the primitives
+    for (size_t i = from; i < to; i++)
+    {
+        float xmin = primitives[i]->GetXmin(), xmax = primitives[i]->GetXmax(),
+            ymin = primitives[i]->GetYmin(), ymax = primitives[i]->GetYmax(),
+            zmin = primitives[i]->GetZmin(), zmax = primitives[i]->GetZmax();
 
-		if (xmin < xminall) xminall = xmin;
-		if (xmax > xmaxall) xmaxall = xmax;
+        if (xmin < xminall) xminall = xmin;
+        if (xmax > xmaxall) xmaxall = xmax;
 
-		if (ymin < yminall) yminall = ymin;
-		if (ymax > ymaxall) ymaxall = ymax;
+        if (ymin < yminall) yminall = ymin;
+        if (ymax > ymaxall) ymaxall = ymax;
 
-		if (zmin < zminall) zminall = zmin;
-		if (zmax > zmaxall) zmaxall = zmax;
-	}
+        if (zmin < zminall) zminall = zmin;
+        if (zmax > zmaxall) zmaxall = zmax;
+    }
 
-	float xrange = xmaxall - xminall;
-	float yrange = ymaxall - yminall;
-	float zrange = zmaxall - zminall;
+    float xrange = xmaxall - xminall;
+    float yrange = ymaxall - yminall;
+    float zrange = zmaxall - zminall;
 
-	node->xmin = xminall;
-	node->xmax = xmaxall;
-	node->ymin = yminall;
-	node->ymax = ymaxall;
-	node->zmin = zminall;
-	node->zmax = zmaxall;
+    node->xmin = xminall;
+    node->xmax = xmaxall;
+    node->ymin = yminall;
+    node->ymax = ymaxall;
+    node->zmin = zminall;
+    node->zmax = zmaxall;
 
-	if (to - from <= minPrimitivesPerNode || currentLevel == maxNumLevels-1)
-	{
+    if (to - from <= minPrimitivesPerNode || currentLevel == maxNumLevels-1)
+    {
         for (auto i = primitives.begin() + from; i != primitives.begin() + to; ++i)
-			node->primitives.push_back(*i);
+            node->primitives.push_back(*i);
 
-		return;
-	}
+        return;
+    }
 
-	// Subdivide along the longest spanned axis --------
+    // Subdivide along the longest spanned axis --------
 
-	auto iterTo = primitives.begin() + to;
+    auto iterTo = primitives.begin() + to;
 
-	/* All primitives in range [from, subdivisionIndex) will be fed to the lower (left) child node,
-	   and those from [subdivisionIndex, iterTo) to the higher (right) node. */
-	size_t subdivisionIndex = from;
+    /* All primitives in range [from, subdivisionIndex) will be fed to the lower (left) child node,
+       and those from [subdivisionIndex, iterTo) to the higher (right) node. */
+    size_t subdivisionIndex = from;
 
-	if (xrange >= yrange && xrange >= zrange)
-	{
-		// Sort by the position of primitive's center
-		std::sort(primitives.begin() + from, iterTo,
+    if (xrange >= yrange && xrange >= zrange)
+    {
+        // Sort by the position of primitive's center
+        std::sort(primitives.begin() + from, iterTo,
 
                   [](const Primitive *p1, const Primitive *p2)
                   { return (p1->GetXmin() + p1->GetXmax())*0.5 < (p2->GetXmin() + p2->GetXmax())*0.5; }
         );
 
-		// Find the first primitive whose middle point is higher than the total BV's middle point
-		while (subdivisionIndex < to &&
-			0.5 * (primitives[subdivisionIndex]->GetXmin() + primitives[subdivisionIndex]->GetXmax()) <= xminall + 0.5*xrange)
+        // Find the first primitive whose middle point is higher than the total BV's middle point
+        while (subdivisionIndex < to &&
+            0.5 * (primitives[subdivisionIndex]->GetXmin() + primitives[subdivisionIndex]->GetXmax()) <= xminall + 0.5*xrange)
         {
             subdivisionIndex++;
         }
-	}
-	else if (yrange >= xrange && yrange >= zrange)
-	{
-		std::sort(primitives.begin() + from, iterTo,
+    }
+    else if (yrange >= xrange && yrange >= zrange)
+    {
+        std::sort(primitives.begin() + from, iterTo,
 
                   [](const Primitive *p1, const Primitive *p2)
                   { return (p1->GetYmin() + p1->GetYmax())*0.5 < (p2->GetYmin() + p2->GetYmax())*0.5; }
         );
 
-		// Find first primitive which is higher than the middle point
-		while (subdivisionIndex < to &&
-			0.5 * (primitives[subdivisionIndex]->GetYmin() + primitives[subdivisionIndex]->GetYmax()) <= yminall + 0.5*yrange)
+        // Find first primitive which is higher than the middle point
+        while (subdivisionIndex < to &&
+            0.5 * (primitives[subdivisionIndex]->GetYmin() + primitives[subdivisionIndex]->GetYmax()) <= yminall + 0.5*yrange)
         {
-			subdivisionIndex++;
+            subdivisionIndex++;
         }
-	}
-	else if (zrange >= xrange && zrange >= yrange)
-	{
-		std::sort(primitives.begin() + from, iterTo,
+    }
+    else if (zrange >= xrange && zrange >= yrange)
+    {
+        std::sort(primitives.begin() + from, iterTo,
 
                   [](const Primitive *p1, const Primitive *p2)
                   { return (p1->GetZmin() + p1->GetZmax())*0.5 < (p2->GetZmin() + p2->GetZmax())*0.5; }
         );
 
-		// Find the first primitive which is higher than the middle point
-		while (subdivisionIndex < to &&
-			0.5 * (primitives[subdivisionIndex]->GetZmin() + primitives[subdivisionIndex]->GetZmax()) <= zminall + 0.5*zrange)
+        // Find the first primitive which is higher than the middle point
+        while (subdivisionIndex < to &&
+            0.5 * (primitives[subdivisionIndex]->GetZmin() + primitives[subdivisionIndex]->GetZmax()) <= zminall + 0.5*zrange)
         {
-			subdivisionIndex++;
+            subdivisionIndex++;
         }
-	}
+    }
 
-	/* Avoid an infinite recursion in case when there is a dominating bounding box
-	   which always gets sorted as last and 'subdivisionIndex' points to it in every subsequent call. */
-	if (to - from > 2)
-	{
-		if (subdivisionIndex == from)
-			subdivisionIndex++;
-		else if (subdivisionIndex == to)
-			subdivisionIndex--;
-	}
+    /* Avoid an infinite recursion in case when there is a dominating bounding box
+       which always gets sorted as last and 'subdivisionIndex' points to it in every subsequent call. */
+    if (to - from > 2)
+    {
+        if (subdivisionIndex == from)
+            subdivisionIndex++;
+        else if (subdivisionIndex == to)
+            subdivisionIndex--;
+    }
 
-	node->higher.reset(new BoundingBox());
-	node->lower.reset(new BoundingBox());
+    node->higher.reset(new BoundingBox());
+    node->lower.reset(new BoundingBox());
 
-	Subdivide(node->lower.get(), primitives, from, subdivisionIndex, currentLevel + 1, maxNumLevels, minPrimitivesPerNode);
-	Subdivide(node->higher.get(), primitives, subdivisionIndex, to, currentLevel + 1, maxNumLevels, minPrimitivesPerNode);
+    Subdivide(node->lower.get(), primitives, from, subdivisionIndex, currentLevel + 1, maxNumLevels, minPrimitivesPerNode);
+    Subdivide(node->higher.get(), primitives, subdivisionIndex, to, currentLevel + 1, maxNumLevels, minPrimitivesPerNode);
 }
 
 static void PushElements(gpuart::Primitive::Data &vec, const std::initializer_list<GLfloat> &list)

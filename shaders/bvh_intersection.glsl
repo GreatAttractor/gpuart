@@ -409,9 +409,9 @@ void CheckBVHIntersection(
                     int ptype = int(floatBitsToUint(texelFetch(bvhTree, primAddr).r));
 
                     primAddr = CheckBVHPrimitiveIntersection(
-									rstart, rdir, ptype,
-									bvhTree, primAddr + 1, // +1 skips the stored 'ptype'
-									currPos, currIntersection, currNormal);
+                                rstart, rdir, ptype,
+                                bvhTree, primAddr + 1, // +1 skips the stored 'ptype'
+                                currPos, currIntersection, currNormal);
 
                     if (currPos > 0 && currPos < closestPos)
                     {

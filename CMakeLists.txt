@@ -39,13 +39,13 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 add_executable(gpuart
-	src/bvh.cpp
-	src/core.cpp
-	src/gl_utils.cpp
-	src/main.cpp
-	src/renderer.cpp
-	src/scenes.cpp
-	src/utils.cpp
+    src/bvh.cpp
+    src/core.cpp
+    src/gl_utils.cpp
+    src/main.cpp
+    src/renderer.cpp
+    src/scenes.cpp
+    src/utils.cpp
 )
 
 set_property(TARGET gpuart PROPERTY CXX_STANDARD 11)

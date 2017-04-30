@@ -49,20 +49,20 @@ vec3 GetOrthogonal(vec3 v)
 vec3 GetRandomHemisphereDirection(in vec3 v, in vec3 randInput)
 {
     // Uses cosine-weighted distribution
-	const float PIDBL = 3.1415926*2;
+    const float PIDBL = 3.1415926*2;
 
-	float _2pr1 = PIDBL * random(randInput.xyz);
-	float r2 = random(randInput.zxy);
-	float sr2 = sqrt(1.0 - r2);
+    float _2pr1 = PIDBL * random(randInput.xyz);
+    float r2 = random(randInput.zxy);
+    float sr2 = sqrt(1.0 - r2);
 
-	float x = cos(_2pr1)*sr2,
-		  y = sin(_2pr1)*sr2,
-		  z = sqrt(r2);
+    float x = cos(_2pr1)*sr2,
+          y = sin(_2pr1)*sr2,
+          z = sqrt(r2);
 
 
-	vec3 tangent = GetOrthogonal(v);
+    vec3 tangent = GetOrthogonal(v);
 
-	return tangent * x + cross(v, tangent) * y + (v*z);
+    return tangent * x + cross(v, tangent) * y + (v*z);
 }
 
 /// Returns 'v' rotated around 'axis' (unit) by an angle with the specified sine and cosine

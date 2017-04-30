@@ -46,30 +46,30 @@ void TriangleIntersection(
     out vec2 uv            ///< Barycentric coordinates of intersection
 )
 {
-	vec3 edge1, edge2, tvec, pvec, qvec;
-	float det, invDet;
+    vec3 edge1, edge2, tvec, pvec, qvec;
+    float det, invDet;
     edge1 = v1 - v0;
-	edge2 = v2 - v0;
-	pvec = cross(rdir, edge2);
-	det = dot(edge1, pvec);
-	if (abs(det) < TRIANGLE_SURFACE_TOLERANCE)
-    {
-		pos = -1;
-		return;
-    }
-
-	invDet = 1/det;
-	tvec = rstart - v0;
-
-	uv.x = dot(tvec, pvec) * invDet;
-	if (uv.x < 0 || uv.x > 1)
+    edge2 = v2 - v0;
+    pvec = cross(rdir, edge2);
+    det = dot(edge1, pvec);
+    if (abs(det) < TRIANGLE_SURFACE_TOLERANCE)
     {
         pos = -1;
-		return;
+        return;
     }
-	qvec = cross(tvec, edge1);
-	uv.y = dot(rdir, qvec) * invDet;
-	if (uv.y < 0 || uv.x + uv.y > 1)
+
+    invDet = 1/det;
+    tvec = rstart - v0;
+
+    uv.x = dot(tvec, pvec) * invDet;
+    if (uv.x < 0 || uv.x > 1)
+    {
+        pos = -1;
+        return;
+    }
+    qvec = cross(tvec, edge1);
+    uv.y = dot(rdir, qvec) * invDet;
+    if (uv.y < 0 || uv.x + uv.y > 1)
         pos = -1;
     else
     {
