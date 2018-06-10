@@ -71,7 +71,7 @@ bool gpuart::Utils::LoadMeshFromPLY(std::vector<gpuart::Primitive*> &primitives,
         if (0 == line.find("element vertex"))
         {
             ss.clear();
-            ss << line;
+            ss.str(line);
             ss.ignore(std::numeric_limits<std::streamsize>::max(), ' '); // "element"
             ss.ignore(std::numeric_limits<std::streamsize>::max(), ' '); // "vertex"
             ss >> numVertices;
@@ -81,7 +81,7 @@ bool gpuart::Utils::LoadMeshFromPLY(std::vector<gpuart::Primitive*> &primitives,
         else if (0 == line.find("element face"))
         {
             ss.clear();
-            ss << line;
+            ss.str(line);
             ss.ignore(std::numeric_limits<std::streamsize>::max(), ' '); // "element"
             ss.ignore(std::numeric_limits<std::streamsize>::max(), ' '); // "face"
             ss >> numFaces;
@@ -95,8 +95,11 @@ bool gpuart::Utils::LoadMeshFromPLY(std::vector<gpuart::Primitive*> &primitives,
     for (size_t i = 0; i < numVertices; i++)
     {
         std::getline(fs, line);
+        if (line.empty())
+            continue;
+
         ss.clear();
-        ss << line;
+        ss.str(line);
 
         float x, y, z;
         ss >> x;
@@ -111,9 +114,11 @@ bool gpuart::Utils::LoadMeshFromPLY(std::vector<gpuart::Primitive*> &primitives,
     for (size_t i = 0; i < numFaces && !fs.eof(); i++)
     {
         std::getline(fs, line);
-        ss.clear();
         if (line.empty())
             continue;
+
+        ss.clear();
+        ss.str(line);
 
         ss << line;
 
@@ -153,11 +158,12 @@ bool gpuart::Utils::LoadPrimitives(std::vector<gpuart::Primitive*> &primitives, 
     while (!fs.eof())
     {
         std::getline(fs, line);
-        ss.clear();
         if (line.empty() || line[0] == '#')
             continue;
 
-        ss << line;
+        ss.clear();
+        ss.str(line);
+
         ss >> token;
         if (token == "sphere")
         {
