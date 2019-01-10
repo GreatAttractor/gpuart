@@ -408,7 +408,7 @@ class GPUARTApp: public nanogui::Screen
         if (Screen::mouseButtonEvent(p, button, down, modifiers))
             return true;
 
-        Eigen::Vector2i truePos = p * mPixelRatio;
+        Eigen::Vector2i truePos = (p.cast<float>() * mPixelRatio).cast<int>();
 
         bool *dragging = nullptr;
         switch (button)
@@ -464,7 +464,7 @@ class GPUARTApp: public nanogui::Screen
         if (Screen::mouseMotionEvent(p, rel, button, modifiers))
             return true;
 
-        Eigen::Vector2i truePos = p * mPixelRatio;
+        Eigen::Vector2i truePos = (p.cast<float>() * mPixelRatio).cast<int>();
 
         gpuart::Camera &cam = Camera.Cam;
 
